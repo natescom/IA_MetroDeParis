@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,12 +20,16 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Sistemas Inteligentes - Metrô de Paris");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        }); // Ao fechar a janela todos os processos sao fechados tambem
         primaryStage.show();
     }
 
 
     public static void main(String[] args) {
-        //launch(args);
+        launch(args);
         int[][] distanciasDiretas = new int[][]{
             {0,  11, 20, 27, 40, 43, 39, 28, 18, 10, 18, 30, 30, 32},
             {11,  0,  9, 16, 29, 32, 28, 19, 11,  4, 17, 23, 21, 24},
@@ -74,6 +79,7 @@ public class Main extends Application {
         e8.connect(e12,7);
         e9.connect(e11,14);
         e13.connect(e14,5);
+
 
         ArrayList<Estacao> linha1 = new ArrayList<>();
         ArrayList<Estacao> linha2 = new ArrayList<>();
