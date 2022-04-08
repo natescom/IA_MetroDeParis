@@ -5,15 +5,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Shape;
 import sample.model.AStarMetro;
 import sample.model.Estacao;
+import sample.model.Texto;
 import sample.model.Vertice;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -51,6 +54,8 @@ public class Controller implements Initializable {
   public Polyline arest_E4E13;
   public Polyline arest_E3E13;
   public Label lbl_log;
+  public TextArea txt_info;
+  public TextArea txt_status;
 
   private Shape[] arestas;
 
@@ -91,24 +96,24 @@ public class Controller implements Initializable {
 
     arestas = new Shape[]{arest_E1E2, arest_E2E3, arest_E3E4, arest_E4E5, arest_E5E6
         , arest_E2E9, arest_E9E3, arest_E5E7, arest_E8E12, arest_E2E10, arest_E13E14
-        , arest_E8E4, arest_E9E8,arest_E8E5,arest_E11E9,arest_E4E13,arest_E3E13
+        , arest_E8E4, arest_E9E8, arest_E8E5, arest_E11E9, arest_E4E13, arest_E3E13
     };
 
     distanciasDiretas = new int[][]{
-        {0,  11, 20, 27, 40, 43, 39, 28, 18, 10, 18, 30, 30, 32},
-        {11,  0,  9, 16, 29, 32, 28, 19, 11,  4, 17, 23, 21, 24},
-        {20,  9,  0,  7, 20, 22, 19, 15, 10, 11, 21, 21, 13, 18},
-        {27, 16,  7,  0, 13, 16, 12, 13, 13, 18, 26, 21, 11, 17},
-        {40, 29, 20, 13,  0,  3,  2, 21, 25, 31, 38, 27, 16, 20},
-        {43, 32, 22, 16,  3,  0,  4, 23, 28, 33, 41, 30, 17, 20},
-        {39, 28, 19, 12,  2,  4,  0, 22, 25, 29, 38, 28, 13, 17},
-        {28, 19, 15, 13, 21, 23, 22,  0,  9, 22, 18,  7, 25, 30},
-        {18, 11, 10, 13, 25, 28, 25,  9,  0, 13, 12, 12, 23, 28},
-        {10,  4, 11, 18, 31, 33, 29, 22, 13,  0, 20, 27, 20, 23},
-        {18, 17, 21, 26, 38, 41, 38, 18, 12, 20,  0, 15, 35, 39},
-        {30, 23, 21, 21, 27, 30, 28,  7, 12, 27, 15,  0, 31, 37},
-        {30, 21, 13, 11, 16, 17, 13, 25, 23, 20, 35, 31,  0,  5},
-        {32, 24, 18, 17, 20, 20, 17, 30, 28, 23, 39, 37,  5,  0}
+        {0, 11, 20, 27, 40, 43, 39, 28, 18, 10, 18, 30, 30, 32},
+        {11, 0, 9, 16, 29, 32, 28, 19, 11, 4, 17, 23, 21, 24},
+        {20, 9, 0, 7, 20, 22, 19, 15, 10, 11, 21, 21, 13, 18},
+        {27, 16, 7, 0, 13, 16, 12, 13, 13, 18, 26, 21, 11, 17},
+        {40, 29, 20, 13, 0, 3, 2, 21, 25, 31, 38, 27, 16, 20},
+        {43, 32, 22, 16, 3, 0, 4, 23, 28, 33, 41, 30, 17, 20},
+        {39, 28, 19, 12, 2, 4, 0, 22, 25, 29, 38, 28, 13, 17},
+        {28, 19, 15, 13, 21, 23, 22, 0, 9, 22, 18, 7, 25, 30},
+        {18, 11, 10, 13, 25, 28, 25, 9, 0, 13, 12, 12, 23, 28},
+        {10, 4, 11, 18, 31, 33, 29, 22, 13, 0, 20, 27, 20, 23},
+        {18, 17, 21, 26, 38, 41, 38, 18, 12, 20, 0, 15, 35, 39},
+        {30, 23, 21, 21, 27, 30, 28, 7, 12, 27, 15, 0, 31, 37},
+        {30, 21, 13, 11, 16, 17, 13, 25, 23, 20, 35, 31, 0, 5},
+        {32, 24, 18, 17, 20, 20, 17, 30, 28, 23, 39, 37, 5, 0}
     };
 
 
@@ -127,40 +132,40 @@ public class Controller implements Initializable {
     e13 = new Estacao("E13");
     e14 = new Estacao("E14");
 
-    estacoes = new Estacao[]{ e1, e2, e3, e4, e5, e6, e7, e8, e9,
+    estacoes = new Estacao[]{e1, e2, e3, e4, e5, e6, e7, e8, e9,
         e10, e11, e12, e13, e14};
 
-    e1.connect(e2,11);
-    e2.connect(e3,9);
-    e2.connect(e9,11);
-    e2.connect(e10,4);
-    e3.connect(e4,7);
-    e3.connect(e9,10);
-    e3.connect(e13,19);
-    e4.connect(e5,15);
-    e4.connect(e8,16);
-    e4.connect(e13,13);
-    e5.connect(e6,3);
-    e5.connect(e7,2);
-    e5.connect(e8,28);
-    e8.connect(e9,11);
-    e8.connect(e12,7);
-    e9.connect(e11,14);
-    e13.connect(e14,5);
+    e1.connect(e2, 11);
+    e2.connect(e3, 9);
+    e2.connect(e9, 11);
+    e2.connect(e10, 4);
+    e3.connect(e4, 7);
+    e3.connect(e9, 10);
+    e3.connect(e13, 19);
+    e4.connect(e5, 15);
+    e4.connect(e8, 16);
+    e4.connect(e13, 13);
+    e5.connect(e6, 3);
+    e5.connect(e7, 2);
+    e5.connect(e8, 28);
+    e8.connect(e9, 11);
+    e8.connect(e12, 7);
+    e9.connect(e11, 14);
+    e13.connect(e14, 5);
 
     e1.setArestas(arest_E1E2);
-    e2.setArestas(arest_E1E2,arest_E2E9,arest_E2E3,arest_E2E10);
-    e3.setArestas(arest_E3E4,arest_E3E13,arest_E2E3,arest_E9E3);
-    e4.setArestas(arest_E4E5,arest_E4E13,arest_E3E4,arest_E8E4);
-    e5.setArestas(arest_E5E6,arest_E5E7,arest_E4E5,arest_E8E5);
+    e2.setArestas(arest_E1E2, arest_E2E9, arest_E2E3, arest_E2E10);
+    e3.setArestas(arest_E3E4, arest_E3E13, arest_E2E3, arest_E9E3);
+    e4.setArestas(arest_E4E5, arest_E4E13, arest_E3E4, arest_E8E4);
+    e5.setArestas(arest_E5E6, arest_E5E7, arest_E4E5, arest_E8E5);
     e6.setArestas(arest_E5E6);
     e7.setArestas(arest_E5E7);
-    e8.setArestas(arest_E8E5,arest_E8E4,arest_E8E12,arest_E9E8);
-    e9.setArestas(arest_E9E8,arest_E9E3,arest_E2E9,arest_E11E9);
+    e8.setArestas(arest_E8E5, arest_E8E4, arest_E8E12, arest_E9E8);
+    e9.setArestas(arest_E9E8, arest_E9E3, arest_E2E9, arest_E11E9);
     e10.setArestas(arest_E2E10);
     e11.setArestas(arest_E11E9);
     e12.setArestas(arest_E8E12);
-    e13.setArestas(arest_E13E14,arest_E4E13,arest_E3E13);
+    e13.setArestas(arest_E13E14, arest_E4E13, arest_E3E13);
     e14.setArestas(arest_E13E14);
 
     linha1 = new ArrayList<>();
@@ -189,7 +194,7 @@ public class Controller implements Initializable {
     linha4.add(e13);
     linha4.add(e14);
 
-    linhas = new ArrayList[] {linha1,linha2,linha3,linha4};
+    linhas = new ArrayList[]{linha1, linha2, linha3, linha4};
 
   }
 
@@ -201,6 +206,7 @@ public class Controller implements Initializable {
   }
 
   public void chamarbusca(RadioButton radioButton) {
+    String info = "";
     if (radioButton.isSelected()) {
       int index = 0;
       for (int i = 0; i < radioButtons.length; i++) {
@@ -211,32 +217,40 @@ public class Controller implements Initializable {
       for (int i = 0; i < radioButtons.length; i++) {
         if (radioButtons[i].isSelected() && radioButtons[i] != radioButton) {
           AStarMetro aStar = new AStarMetro(linhas, linha1);
-          if(i>index){
+          if (i > index) {
             int b = i;
             i = index;
             index = b;
           }
-          ArrayList<Vertice> caminho = aStar.buscar(estacoes[i],estacoes[index], distanciasDiretas);
+          ArrayList<Vertice> caminho = aStar.buscar(estacoes[i], estacoes[index], distanciasDiretas);
           caminhoMaisCurto = new ArrayList<>();
+          info += "Você percorrerá " + caminho.size() + " estações, sendo elas a ";
           for (Vertice vertice : caminho) {
             caminhoMaisCurto.add((Estacao) vertice);
             System.out.print(((Estacao) vertice).getNome() + " ");
+            if (!vertice.equals(caminho.get(caminho.size() - 1)))
+              info += ((Estacao) vertice).getNome() + ", ";
+            else
+              info += ((Estacao) vertice).getNome() + ". ";
             formatarCaminho(true);
           }
-            System.out.println();
+          System.out.println();
 
           desativarRB(radioButton, radioButtons[i]);
           lbl_log.setText("Esse é o caminho mais curto");
+          publishDica(info);
           break;
-        }else{
+        } else {
           lbl_log.setText("Selecione outra estação");
+          publishDica("Aguardando estação");
         }
       }
-    }else {
+    } else {
       ativarRB();
       formatarCaminho(false);
       lbl_log.setText("Selecione uma estação");
     }
+    publishInfo(sorteiaDica());
   }
 
   public void desativarRB(RadioButton rb1, RadioButton rb2) {
@@ -253,23 +267,22 @@ public class Controller implements Initializable {
     }
   }
 
-  public void formatarCaminho(boolean destaque){
+  public void formatarCaminho(boolean destaque) {
     for (Shape aresta : arestas) {
-      if(destaque)
+      if (destaque)
         aresta.setOpacity(0.3);
       else
         aresta.setOpacity(1);
     }
-    for (int i = 0; i < caminhoMaisCurto.size()-1; i++) {
+    for (int i = 0; i < caminhoMaisCurto.size() - 1; i++) {
       for (Shape aresta : caminhoMaisCurto.get(i).getArestas()) {
         for (Shape shape : caminhoMaisCurto.get(i + 1).getArestas()) {
-          if(aresta.equals(shape))
+          if (aresta.equals(shape))
             Platform.runLater(() -> {
-              if(destaque) {
+              if (destaque) {
                 shape.setStrokeWidth(7);
                 shape.setOpacity(1);
-              }
-              else {
+              } else {
                 shape.setStrokeWidth(4);
               }
             });
@@ -278,7 +291,29 @@ public class Controller implements Initializable {
     }
   }
 
+  public void publishDica(String string) {
+    Platform.runLater(() -> txt_status.setText(string));
+  }
 
+  public void publishInfo(String string) {
+    Platform.runLater(() -> txt_info.setText(string));
+  }
 
+  public String sorteiaDica() {
+    Random random = new Random();
+    int option = random.nextInt(4) + 1;
+    switch (option) {
+      case 1:
+        return Texto.dica1;
+      case 2:
+        return Texto.dica2;
+      case 3:
+        return Texto.dica3;
+      case 4:
+        return Texto.dica4;
+      default:
+        return Texto.dica5;
+    }
+  }
 
 }

@@ -19,7 +19,7 @@ public class AStarMetro extends AStar{
           return 0;
         }else{
           linhaAtual = linha;
-          return 2; // 30km/h * 4min = 0,5km/m *4min = 2
+          return 4;
         }
       }
     }
